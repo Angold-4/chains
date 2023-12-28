@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Enable the environment variable
-source env.sh
+. env.sh
 
 export ORDERER_CA=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem
 
@@ -27,23 +27,14 @@ verifyResult() {
     fi
 }
 
-# Set environment variables for the peer org
-function setGlobals() {
-    export CORE_PEER_TLS_ENABLED=true # enable TLS
-    export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/../cert/chains/peerOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem
-    export CORE_PEER_LOCALMSPID="layer1MSP"
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/../cert/chains/peerOrganizations/layer1.chains/users/Admin@layer1.chains/msp
-    export CORE_PEER_ADDRESS=localhost:$1
-    echo $CORE_PEER_ADDRESS
-}
-
 # Create the genesis block in a .block file based on configtx.yaml
 function createGenesisBlock() {
+    setGlobals 6001 #?
     which configtxgen
     if [ "$?" -ne 0 ]; then
 	echo "configtxgen tool not found."
     fi
-    configtxgen -profile Raft -outputBlock ../channel-artifacts/layer1.block -channelID layer1
+    configtxgen -profile Raft -outputBlock ../channel-artifacts/layer1.block -channelID chains
 }
 
 function createChannel() {
@@ -57,7 +48,8 @@ function createChannel() {
     export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.key
 
     # Create the channel and join orderer1.layer1.chains to the channel.
-    osnadmin channel join --channelID layer1 --config-block ${PWD}/../channel-artifacts/layer1.block -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY" >> log.txt 2>&1
+    osnadmin channel join --channelID chains --config-block ${PWD}/../channel-artifacts/layer1.block -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
+    osnadmin channel list --channelID chains -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
 }
 
 function joinChannel() {
@@ -66,7 +58,6 @@ function joinChannel() {
     local COUNTER=1
     local DELAY=2
     local MAX_RETRY=3
-    export FABRIC_CFG_PATH=${PWD}/../cert/config/
     ## Sometimes Join takes time, hence retry
 	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
     sleep $DELAY
@@ -90,9 +81,13 @@ function stopChannel() {
     docker volume rm $(docker volume ls -q)
 }
 
+function setAnchorPeer() {
+    docker exec cli ./scripts/anchor.sh
+}
+
 # stopChannel
 createGenesisBlock
 createChannel
 joinChannel 6001
 joinChannel 6002
-
+# setAnchorPeer # set peer1 as the anchor peer (hardcoded)

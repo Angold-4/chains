@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Enable the environment variable
-source env.sh
+. env.sh
 
 # If you want to create the certificates for peers and orderers of layer1, using create.sh inside cert/ folder.
 
@@ -12,7 +12,8 @@ function nodesUp() {
     fatalln "Please generate the certificates for your organizations before bring the nodes up."
   fi
 
-  COMPOSE_FILES="-f ../cert/compose/compose.yaml"
+  # Two compose files
+  COMPOSE_FILES="-f ../cert/compose/compose.yaml -f ../cert/compose/docker/docker-compose.yaml"
 
   # start the docker container
   # docker-compose ${COMPOSE_FILES} up -d --build > log.txt

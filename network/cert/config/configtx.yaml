@@ -14,9 +14,32 @@
 ################################################################################
 Organizations:
   - &layer1
-    Name: layer1
+    Name: layer1MSP
     # ID to load the MSP definition as
     ID: layer1MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/layer1.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('layer1MSP.admin', 'layer1MSP.peer', 'layer1MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('layer1MSP.admin', 'layer1MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('layer1MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('layer1MSP.peer')"
+
+  - &orderer
+    Name: orderer
+    # ID to load the MSP definition as
+    ID: OrdererMSP
     # MSPDir is the filesystem path which contains the MSP configuration
     MSPDir: ../chains/ordererOrganizations/layer1.chains/msp
     # Policies defines the set of policies at this level of the config tree
@@ -25,16 +48,16 @@ Organizations:
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('layer1MSP.member')"
+        Rule: "OR('OrdererMSP.member')"
       Writers:
         Type: Signature
-        Rule: "OR('layer1MSP.member')"
+        Rule: "OR('OrdererMSP.member')"
       Admins:
         Type: Signature
-        Rule: "OR('layer1MSP.admin')"
+        Rule: "OR('OrdererMSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('layer1MSP.peer')"
+        Rule: "OR('OrdererMSP.peer')"
     # OrdererEndpoints is a list of all orderers this org runs which clients
     # and peers may to connect to to push transactions and receive blocks respectively.
     OrdererEndpoints:
@@ -117,11 +140,11 @@ Application: &ApplicationDefaults
       Rule: "MAJORITY Admins"
     LifecycleEndorsement:
       Type: ImplicitMeta
-      Rule: "ANY Endorsement"
+      Rule: "MAJORITY Endorsement"
     # Note that this endorsement is for channel configuraion, not the chaincode
     Endorsement:
       Type: ImplicitMeta
-      Rule: "ANY Endorsement"
+      Rule: "MAJORITY Endorsement"
   Capabilities:
     <<: *ApplicationCapabilities
 ################################################################################
@@ -173,7 +196,7 @@ Orderer: &OrdererDefaults
     # from the orderer for the peer to validate it.
     BlockValidation:
       Type: ImplicitMeta
-      Rule: "MAJORITY Writers"
+      Rule: "ANY Writers"
 ################################################################################
 #
 #   CHANNEL
@@ -225,7 +248,7 @@ Profiles:
             ClientTLSCert: ../chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.crt
             ServerTLSCert: ../chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.crt
       Organizations:
-        - *layer1
+        - *orderer
       Capabilities: *OrdererCapabilities
     Application:
       <<: *ApplicationDefaults

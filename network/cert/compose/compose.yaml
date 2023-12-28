@@ -58,7 +58,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      #- FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -83,12 +83,12 @@ services:
     volumes:
       - ../chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains:/etc/hyperledger/fabric
       - peer1.layer1.chains:/var/hyperledger/production
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
     ports:
       - 6001:6001
-      - 6101:6101
+      - 9001:9001
     networks:
       - chains
 
@@ -98,7 +98,7 @@ services:
     labels:
       service: hyperledger-fabric
     environment:
-      #- FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
       - FABRIC_LOGGING_SPEC=INFO
       #- FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_TLS_ENABLED=true
@@ -123,11 +123,35 @@ services:
     volumes:
       - ../chains/peerOrganizations/layer1.chains/peers/peer2.layer1.chains:/etc/hyperledger/fabric
       - peer2.layer1.chains:/var/hyperledger/production
-      - /var/run/docker.sock:/var/run/docker.sock
+      # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
     ports:
       - 6002:6002
-      - 6102:6102
+      - 9002:9002
+    networks:
+      - chains
+
+  cli:
+    container_name: cli
+    image: hyperledger/fabric-tools:latest
+    labels:
+      service: hyperledger-fabric
+    tty: true
+    stdin_open: true
+    environment:
+      - GOPATH=/opt/gopath
+      - FABRIC_LOGGING_SPEC=INFO
+      - FABRIC_CFG_PATH=/etc/hyperledger/peercfg
+      #- FABRIC_LOGGING_SPEC=DEBUG
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+    command: /bin/bash
+    volumes:
+      - ../organizations:/opt/gopath/src/github.com/hyperledger/fabric/peer/organizations
+      - ../../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
+      - ../../cert:/opt/gopath/src/github.com/hyperledger/fabric/peer/../cert/
+    depends_on:
+      - peer1.layer1.chains
+      - peer2.layer1.chains
     networks:
       - chains
