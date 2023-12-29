@@ -7,6 +7,8 @@ export pkg=$1
 export id=$2
 export FABRIC_CFG_PATH=${PWD}/../cert/config/
 
+export TLS_ROOT_CERT=${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains/tls/ca.crt
+
 function setChaincode() {
     local name=$1
     local port=$2
@@ -56,7 +58,7 @@ function invokeChaincode() {
     FABRIC_CFG_PATH=$PWD/../cert/config/
     setChaincode 1 6001
     peer lifecycle chaincode querycommitted --channelID chains --name basic
-    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic --peerAddresses localhost:6001 --tlsRootCertFiles "${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains/tls/ca.crt" --peerAddresses localhost:6002 --tlsRootCertFiles "${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer2.layer1.chains/tls/ca.crt" -c '{"function":"InitLedger","Args":[]}'
+    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic --peerAddresses localhost:6001 --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --peerAddresses localhost:6002 --peerAddresses localhost:6003 --peerAddresses localhost:6004 --peerAddresses localhost:6005 --peerAddresses localhost:6006 --peerAddresses localhost:6007 --peerAddresses localhost:6008 -c '{"function":"InitLedger","Args":[]}'
     sleep 2
     echo "GetAllAssets:"
     peer chaincode query -C chains -n basic -c '{"Args":["GetAllAssets"]}'
@@ -67,22 +69,48 @@ function invokeChaincode() {
     sleep 2
 
     echo "TransferAsset asset6 Christopher"
-    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic --peerAddresses localhost:6001 --tlsRootCertFiles "${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains/tls/ca.crt" --peerAddresses localhost:6002 --tlsRootCertFiles "${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer2.layer1.chains/tls/ca.crt" -c '{"function":"TransferAsset","Args":["asset6","Christopher"]}'
+    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic --peerAddresses localhost:6001 --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --peerAddresses localhost:6002 --peerAddresses localhost:6003 --peerAddresses localhost:6004 --peerAddresses localhost:6005 --peerAddresses localhost:6006 --peerAddresses localhost:6007 --peerAddresses localhost:6008 -c '{"function":"TransferAsset","Args":["asset6","Christopher"]}'
+
     sleep 2
 
     echo "ReadAsset asset6:(peer2)"
     setChaincode 2 6002
     peer chaincode query -C chains -n basic -c '{"Args":["ReadAsset","asset6"]}'
+
+    sleep 2
+    echo "ReadAsset asset6:(peer6)"
+    setChaincode 6 6006
+    peer chaincode query -C chains -n basic -c '{"Args":["ReadAsset","asset6"]}'
 }
 
 packageChaincode
+
 installChaincode 1 6001
 installChaincode 2 6002
+installChaincode 3 6003
+installChaincode 4 6004
+installChaincode 5 6005
+installChaincode 6 6006
+installChaincode 7 6007
+installChaincode 8 6008
+
 queryInstalled 1 6001
 queryInstalled 2 6002
+queryInstalled 3 6003
+queryInstalled 4 6004
+queryInstalled 5 6005
+queryInstalled 6 6006
+queryInstalled 7 6007
+queryInstalled 8 6008
+
 approveChaincode 1 6001 basic_1.0:e4de097efb5be42d96aebc4bde18eea848aad0f5453453ba2aad97f2e41e0d57 7001
 commitChaincode 1 6001 x 7001
+
 queryCommitted 2 6002
+queryCommitted 4 6004
+queryCommitted 6 6006
+queryCommitted 8 6008
+
 invokeChaincode
 
 

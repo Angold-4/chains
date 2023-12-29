@@ -90,4 +90,10 @@ createGenesisBlock
 createChannel
 joinChannel 6001
 joinChannel 6002
+joinChannel 6003
+joinChannel 6004
+joinChannel 6005
+joinChannel 6006
+joinChannel 6007
+joinChannel 6008
 # setAnchorPeer # set peer1 as the anchor peer (hardcoded)

@@ -12,7 +12,7 @@ OrdererOrgs:
     # "Specs" - See PeerOrgs for complete description
     # ---------------------------------------------------------------------------
     Template:
-      Count: 5
+      Count: 3
       SANS:
         - localhost
       Start: 1
