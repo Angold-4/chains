@@ -34,7 +34,7 @@ function createGenesisBlock() {
     if [ "$?" -ne 0 ]; then
 	echo "configtxgen tool not found."
     fi
-    configtxgen -profile Raft -outputBlock ../channel-artifacts/layer1.block -channelID chains
+    configtxgen -profile Raft -outputBlock ../channel-artifacts/chains.block -channelID chains
 }
 
 function createChannel() {
@@ -48,12 +48,12 @@ function createChannel() {
     export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.key
 
     # Create the channel and join orderer1.layer1.chains to the channel.
-    osnadmin channel join --channelID chains --config-block ${PWD}/../channel-artifacts/layer1.block -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
+    osnadmin channel join --channelID chains --config-block ${PWD}/../channel-artifacts/chains.block -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
     osnadmin channel list --channelID chains -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
 }
 
 function joinChannel() {
-    setGlobals $1
+    setGlobals $1 $2
     local rc=1
     local COUNTER=1
     local DELAY=2
@@ -63,7 +63,7 @@ function joinChannel() {
     sleep $DELAY
     set -x # enable detailed logging
     # peer channel
-    peer channel join -b ../channel-artifacts/layer1.block >&log.txt
+    peer channel join -b ../channel-artifacts/chains.block >&log.txt
     res=$?
     { set +x; } 2>/dev/null
 		let rc=$res
@@ -73,27 +73,34 @@ function joinChannel() {
     verifyResult $res "After $MAX_RETRY attempts, peer${ORG} has failed to join channel"
 }
 
-function stopChannel() {
-    # This step will also delete all the data in the network
-    docker stop $(docker ps -q)
-    docker rm $(docker ps -a -q)
-    # Clear all the volumes
-    docker volume rm $(docker volume ls -q)
-}
-
 function setAnchorPeer() {
-    docker exec cli ./scripts/anchor.sh
+    docker exec cli ./scripts/anchor.sh $1 $2
 }
 
-# stopChannel
 createGenesisBlock
 createChannel
-joinChannel 6001
-joinChannel 6002
-joinChannel 6003
-joinChannel 6004
-joinChannel 6005
-joinChannel 6006
-joinChannel 6007
-joinChannel 6008
-# setAnchorPeer # set peer1 as the anchor peer (hardcoded)
+
+function joinChannels() {
+    joinChannel org01 6001
+    joinChannel org02 6002
+    joinChannel org03 6003
+    joinChannel org04 6004
+    joinChannel org05 6005
+    joinChannel org06 6006
+    joinChannel org07 6007
+    joinChannel org08 6008
+}
+
+function setAnchorPeers() {
+    setAnchorPeer org01 6001
+    setAnchorPeer org02 6002
+    setAnchorPeer org03 6003
+    setAnchorPeer org04 6004
+    setAnchorPeer org05 6005
+    setAnchorPeer org06 6006
+    setAnchorPeer org07 6007
+    setAnchorPeer org08 6008
+}
+
+joinChannels
+setAnchorPeers

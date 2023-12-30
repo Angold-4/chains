@@ -1,13 +1,13 @@
 volumes:
   orderer1.layer1.chains:
-  peer1.layer1.chains:
-  peer2.layer1.chains:
-  peer3.layer1.chains:
-  peer4.layer1.chains:
-  peer5.layer1.chains:
-  peer6.layer1.chains:
-  peer7.layer1.chains:
-  peer8.layer1.chains:
+  peer1.org01.chains:
+  peer1.org02.chains:
+  peer1.org03.chains:
+  peer1.org04.chains:
+  peer1.org05.chains:
+  peer1.org06.chains:
+  peer1.org07.chains:
+  peer1.org08.chains:
 
 
 networks:
@@ -58,8 +58,8 @@ services:
     networks:
       - chains
 
-  peer1.layer1.chains:
-    container_name: peer1.layer1.chains
+  peer1.org01.chains:
+    container_name: peer1.org01.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -73,22 +73,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer1.layer1.chains
-      - CORE_PEER_ADDRESS=peer1.layer1.chains:6001
+      - CORE_PEER_ID=peer1.org01.chains
+      - CORE_PEER_ADDRESS=peer1.org01.chains:6001
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6001
-      - CORE_PEER_CHAINCODEADDRESS=peer1.layer1.chains:6101
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org01.chains:6101
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6101
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.layer1.chains:6001
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org01.chains:6001
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org01.chains:6001
+      - CORE_PEER_LOCALMSPID=org01MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer1.layer1.chains:9001
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org01.chains:9001
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org01"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains:/etc/hyperledger/fabric
-      - peer1.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org01.chains/peers/peer1.org01.chains:/etc/hyperledger/fabric
+      - peer1.org01.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -97,9 +97,9 @@ services:
       - 9001:9001
     networks:
       - chains
-
-  peer2.layer1.chains:
-    container_name: peer2.layer1.chains
+      
+  peer1.org02.chains:
+    container_name: peer1.org02.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -113,22 +113,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer2.layer1.chains
-      - CORE_PEER_ADDRESS=peer2.layer1.chains:6002
+      - CORE_PEER_ID=peer1.org02.chains
+      - CORE_PEER_ADDRESS=peer1.org02.chains:6002
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6002
-      - CORE_PEER_CHAINCODEADDRESS=peer2.layer1.chains:6102
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org02.chains:6102
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6102
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer2.layer1.chains:6002
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org02.chains:6002
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org02.chains:6002
+      - CORE_PEER_LOCALMSPID=org02MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer2.layer1.chains:9002
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org02.chains:9002
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer2layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org02"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer2.layer1.chains:/etc/hyperledger/fabric
-      - peer2.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org02.chains/peers/peer1.org02.chains:/etc/hyperledger/fabric
+      - peer1.org02.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -138,8 +138,8 @@ services:
     networks:
       - chains
 
-  peer3.layer1.chains:
-    container_name: peer3.layer1.chains
+  peer1.org03.chains:
+    container_name: peer1.org03.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -153,22 +153,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer3.layer1.chains
-      - CORE_PEER_ADDRESS=peer3.layer1.chains:6003
+      - CORE_PEER_ID=peer1.org03.chains
+      - CORE_PEER_ADDRESS=peer1.org02.chains:6003
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6003
-      - CORE_PEER_CHAINCODEADDRESS=peer3.layer1.chains:6103
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org03.chains:6103
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6103
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer3.layer1.chains:6003
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org03.chains:6003
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org03.chains:6003
+      - CORE_PEER_LOCALMSPID=org03MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer3.layer1.chains:9003
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org03.chains:9003
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer3layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org03"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer3.layer1.chains:/etc/hyperledger/fabric
-      - peer3.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org03.chains/peers/peer1.org03.chains:/etc/hyperledger/fabric
+      - peer1.org03.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -178,8 +178,8 @@ services:
     networks:
       - chains
 
-  peer4.layer1.chains:
-    container_name: peer4.layer1.chains
+  peer1.org04.chains:
+    container_name: peer1.org04.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -193,22 +193,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer4.layer1.chains
-      - CORE_PEER_ADDRESS=peer4.layer1.chains:6004
+      - CORE_PEER_ID=peer1.org04.chains
+      - CORE_PEER_ADDRESS=peer1.org04.chains:6004
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6004
-      - CORE_PEER_CHAINCODEADDRESS=peer4.layer1.chains:6104
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org04.chains:6104
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6104
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer4.layer1.chains:6004
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org04.chains:6004
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org04.chains:6004
+      - CORE_PEER_LOCALMSPID=org04MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer4.layer1.chains:9004
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org04.chains:9004
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer4layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org04"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer4.layer1.chains:/etc/hyperledger/fabric
-      - peer4.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org04.chains/peers/peer1.org04.chains:/etc/hyperledger/fabric
+      - peer1.org04.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -218,8 +218,8 @@ services:
     networks:
       - chains
 
-  peer5.layer1.chains:
-    container_name: peer5.layer1.chains
+  peer1.org05.chains:
+    container_name: peer1.org05.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -233,22 +233,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer5.layer1.chains
-      - CORE_PEER_ADDRESS=peer5.layer1.chains:6005
+      - CORE_PEER_ID=peer1.org05.chains
+      - CORE_PEER_ADDRESS=peer1.org04.chains:6005
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6005
-      - CORE_PEER_CHAINCODEADDRESS=peer5.layer1.chains:6105
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org05.chains:6105
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6105
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer5.layer1.chains:6005
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org05.chains:6005
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org05.chains:6005
+      - CORE_PEER_LOCALMSPID=org05MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer5.layer1.chains:9005
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org05.chains:9005
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer5layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org05"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer5.layer1.chains:/etc/hyperledger/fabric
-      - peer5.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org05.chains/peers/peer1.org05.chains:/etc/hyperledger/fabric
+      - peer1.org05.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -258,8 +258,8 @@ services:
     networks:
       - chains
 
-  peer6.layer1.chains:
-    container_name: peer6.layer1.chains
+  peer1.org06.chains:
+    container_name: peer1.org06.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -273,22 +273,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer6.layer1.chains
-      - CORE_PEER_ADDRESS=peer6.layer1.chains:6006
+      - CORE_PEER_ID=peer1.org06.chains
+      - CORE_PEER_ADDRESS=peer1.org06.chains:6006
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6006
-      - CORE_PEER_CHAINCODEADDRESS=peer6.layer1.chains:6106
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org06.chains:6106
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6106
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer6.layer1.chains:6006
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org06.chains:6006
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org06.chains:6006
+      - CORE_PEER_LOCALMSPID=org06MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer6.layer1.chains:9006
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org06.chains:9006
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer6layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org06"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer6.layer1.chains:/etc/hyperledger/fabric
-      - peer6.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org06.chains/peers/peer1.org06.chains:/etc/hyperledger/fabric
+      - peer1.org06.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -298,8 +298,8 @@ services:
     networks:
       - chains
 
-  peer7.layer1.chains:
-    container_name: peer7.layer1.chains
+  peer1.org07.chains:
+    container_name: peer1.org07.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -313,22 +313,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer7.layer1.chains
-      - CORE_PEER_ADDRESS=peer7.layer1.chains:6007
+      - CORE_PEER_ID=peer1.org07.chains
+      - CORE_PEER_ADDRESS=peer1.org07.chains:6007
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6007
-      - CORE_PEER_CHAINCODEADDRESS=peer7.layer1.chains:6107
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org07.chains:6107
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6107
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer7.layer1.chains:6007
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org07.chains:6007
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org07.chains:6007
+      - CORE_PEER_LOCALMSPID=org07MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer7.layer1.chains:9007
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org07.chains:9007
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer7layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org07"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer7.layer1.chains:/etc/hyperledger/fabric
-      - peer7.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org07.chains/peers/peer1.org07.chains:/etc/hyperledger/fabric
+      - peer1.org07.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -338,8 +338,8 @@ services:
     networks:
       - chains
 
-  peer8.layer1.chains:
-    container_name: peer8.layer1.chains
+  peer1.org08.chains:
+    container_name: peer1.org08.chains
     image: hyperledger/fabric-peer:latest
     labels:
       service: hyperledger-fabric
@@ -353,22 +353,22 @@ services:
       - CORE_PEER_TLS_KEY_FILE=/etc/hyperledger/fabric/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
-      - CORE_PEER_ID=peer8.layer1.chains
-      - CORE_PEER_ADDRESS=peer8.layer1.chains:6008
+      - CORE_PEER_ID=peer1.org08.chains
+      - CORE_PEER_ADDRESS=peer1.org08.chains:6008
       - CORE_PEER_LISTENADDRESS=0.0.0.0:6008
-      - CORE_PEER_CHAINCODEADDRESS=peer8.layer1.chains:6108
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org08.chains:6108
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6108
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.layer1.chains:6001
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer8.layer1.chains:6008
-      - CORE_PEER_LOCALMSPID=layer1MSP
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org08.chains:6008
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org08.chains:6008
+      - CORE_PEER_LOCALMSPID=org08MSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/fabric/msp
-      - CORE_OPERATIONS_LISTENADDRESS=peer8.layer1.chains:9008
+      - CORE_OPERATIONS_LISTENADDRESS=peer1.org08.chains:9008
       - CORE_METRICS_PROVIDER=prometheus
-      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer8layer1"}
+      - CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG={"peername":"peer1org08"}
       - CORE_CHAINCODE_EXECUTETIMEOUT=300s
     volumes:
-      - ../chains/peerOrganizations/layer1.chains/peers/peer8.layer1.chains:/etc/hyperledger/fabric
-      - peer8.layer1.chains:/var/hyperledger/production
+      - ../chains/peerOrganizations/org08.chains/peers/peer1.org08.chains:/etc/hyperledger/fabric
+      - peer1.org08.chains:/var/hyperledger/production
       # - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /root
     command: peer node start
@@ -377,6 +377,7 @@ services:
       - 9008:9008
     networks:
       - chains
+
   cli:
     container_name: cli
     image: hyperledger/fabric-tools:latest
@@ -396,13 +397,13 @@ services:
       - ../../scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
       - ../../cert:/opt/gopath/src/github.com/hyperledger/fabric/peer/../cert/
     depends_on:
-      - peer1.layer1.chains
-      - peer2.layer1.chains
-      - peer3.layer1.chains
-      - peer4.layer1.chains
-      - peer5.layer1.chains
-      - peer6.layer1.chains
-      - peer7.layer1.chains
-      - peer8.layer1.chains
+      - peer1.org01.chains
+      - peer1.org02.chains
+      - peer1.org03.chains
+      - peer1.org04.chains
+      - peer1.org05.chains
+      - peer1.org06.chains
+      - peer1.org07.chains
+      - peer1.org08.chains
     networks:
       - chains

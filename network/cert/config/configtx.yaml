@@ -13,28 +13,189 @@
 #
 ################################################################################
 Organizations:
-  - &layer1
-    Name: layer1MSP
+  - &org01
+    Name: org01MSP
     # ID to load the MSP definition as
-    ID: layer1MSP
+    ID: org01MSP
     # MSPDir is the filesystem path which contains the MSP configuration
-    MSPDir: ../chains/peerOrganizations/layer1.chains/msp
+    MSPDir: ../chains/peerOrganizations/org01.chains/msp
     # Policies defines the set of policies at this level of the config tree
     # For organization policies, their canonical path is usually
     #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('layer1MSP.admin', 'layer1MSP.peer', 'layer1MSP.client')"
+        Rule: "OR('org01MSP.admin', 'org01MSP.peer', 'org01MSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('layer1MSP.admin', 'layer1MSP.client')"
+        Rule: "OR('org01MSP.admin', 'org01MSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('layer1MSP.admin')"
+        Rule: "OR('org01MSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('layer1MSP.peer')"
+        Rule: "OR('org01MSP.peer')"
+
+  - &org02
+    Name: org02MSP
+    # ID to load the MSP definition as
+    ID: org02MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/org02.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org02MSP.admin', 'org02MSP.peer', 'org02MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org02MSP.admin', 'org02MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org02MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org02MSP.peer')"
+
+  - &org03
+    Name: org03MSP
+    # ID to load the MSP definition as
+    ID: org03MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/org03.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org03MSP.admin', 'org03MSP.peer', 'org03MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org03MSP.admin', 'org03MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org03MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org03MSP.peer')"
+
+  - &org04
+    Name: org04MSP
+    # ID to load the MSP definition as
+    ID: org04MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/org04.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org04MSP.admin', 'org04MSP.peer', 'org04MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org04MSP.admin', 'org04MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org04MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org04MSP.peer')"
+
+  - &org05
+    Name: org05MSP
+    # ID to load the MSP definition as
+    ID: org05MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/org05.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org05MSP.admin', 'org05MSP.peer', 'org05MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org05MSP.admin', 'org05MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org05MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org05MSP.peer')"
+
+  - &org06
+    Name: org06MSP
+    # ID to load the MSP definition as
+    ID: org06MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/org06.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org06MSP.admin', 'org06MSP.peer', 'org06MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org06MSP.admin', 'org06MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org06MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org06MSP.peer')"
+
+  - &org07
+    Name: org07MSP
+    # ID to load the MSP definition as
+    ID: org07MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/org07.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org07MSP.admin', 'org07MSP.peer', 'org07MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org07MSP.admin', 'org07MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org07MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org07MSP.peer')"
+
+  - &org08
+    Name: org08MSP
+    # ID to load the MSP definition as
+    ID: org08MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/peerOrganizations/org08.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('org08MSP.admin', 'org08MSP.peer', 'org08MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('org08MSP.admin', 'org08MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('org08MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('org08MSP.peer')"
 
   - &orderer
     Name: orderer
@@ -253,5 +414,12 @@ Profiles:
     Application:
       <<: *ApplicationDefaults
       Organizations:
-        - *layer1
+        - *org01
+        - *org02
+        - *org03
+        - *org04
+        - *org05
+        - *org06
+        - *org07
+        - *org08
       Capabilities: *ApplicationCapabilities

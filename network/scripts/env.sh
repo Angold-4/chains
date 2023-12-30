@@ -12,16 +12,18 @@ export CHANNEL_NAME=chains
 
 # Set environment variables for the peer org
 function setGlobals() {
+    # setGlobals orgname, port
+    local orgname=$1
+    local port=$2
     export CORE_PEER_TLS_ENABLED=true # enable TLS
-    export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/../cert/chains/peerOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem
-    export CORE_PEER_LOCALMSPID="layer1MSP"
-    export CORE_PEER_MSPCONFIGPATH=${PWD}/../cert/chains/peerOrganizations/layer1.chains/users/Admin@layer1.chains/msp
-    export CORE_PEER_ADDRESS=localhost:$1
+    export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/../cert/chains/peerOrganizations/${orgname}.chains/tlsca/tlsca.${orgname}.chains-cert.pem
+    export CORE_PEER_LOCALMSPID="${orgname}MSP"
+    export CORE_PEER_MSPCONFIGPATH=${PWD}/../cert/chains/peerOrganizations/${orgname}.chains/users/Admin@${orgname}.chains/msp
+    export CORE_PEER_ADDRESS=localhost:${port}
 }
 
 # Set environment variables for use in the CLI container
 setGlobalsCLI() {
     # single organization setup
-    setGlobals 6001
-    export CORE_PEER_ADDRESS=peer1.layer1.chains:6001
+    setGlobals $1 $2
 }

@@ -8,7 +8,6 @@ createConfigUpdate() {
   ORIGINAL=$2
   MODIFIED=$3
   OUTPUT=$4
-
   set -x
   configtxlator proto_encode --input "${ORIGINAL}" --type common.Config --output original_config.pb
   configtxlator proto_encode --input "${MODIFIED}" --type common.Config --output modified_config.pb
@@ -20,14 +19,15 @@ createConfigUpdate() {
 }
 
 fetchChannelConfig() {
-    ORG=$1
-    CHANNEL=$2
+    ORGNAME=$1
+    PORT=$2
     OUTPUT=$3
+    PORT=$4
 
-    setGlobals $ORG # 6001
+    setGlobals $ORGNAME $PORT
 
     set -x
-    peer channel fetch config config_block.pb -o orderer1.layer1.chains:7001 --ordererTLSHostnameOverride orderer1.layer1.chains -c $CHANNEL --tls --cafile "$ORDERER_CA"
+    peer channel fetch config config_block.pb -o orderer1.layer1.chains:7001 --ordererTLSHostnameOverride orderer1.layer1.chains -c chains --tls --cafile "$ORDERER_CA"
     { set +x; } 2>/dev/null
 
     set -x
@@ -41,10 +41,13 @@ fetchChannelConfig() {
 #
 # SPDX-License-Identifier: Apache-2.0
 createAnchorPeerUpdate() {
-    fetchChannelConfig 6001 $CHANNEL_NAME ${CORE_PEER_LOCALMSPID}config.json
+    ORGNAME=$1
+    PORT=$2
 
-    HOST="peer1.layer1.chains"
-    PORT=6001
+    fetchChannelConfig $ORGNAME $CHANNEL_NAME ${CORE_PEER_LOCALMSPID}config.json $PORT
+
+    HOST="peer1.$ORGNAME.chains"
+    PORT=$PORT
 
     set -x
     # Modify the configuration to append the anchor peer 
@@ -63,8 +66,12 @@ updateAnchorPeer() {
   cat log.txt
 }
 
-setGlobalsCLI
+ORGNAME=$1
+PORT=$2
+export CHANNEL_NAME=chains
 
-createAnchorPeerUpdate
+setGlobalsCLI $ORGNAME $PORT
+
+createAnchorPeerUpdate $ORGNAME $PORT
 
 updateAnchorPeer
