@@ -6,9 +6,53 @@
 export pkg=$1
 export id=$2
 export FABRIC_CFG_PATH=${PWD}/../cert/config/
+export PEER_CONN_PARMS=()
 
 export TLS_ROOT_CERT=${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains/tls/ca.crt
+export PACKAGE="basic_1.0:e4de097efb5be42d96aebc4bde18eea848aad0f5453453ba2aad97f2e41e0d57"
 
+parsePeerConnectionParameters() {
+  PEER_CONN_PARMS=()
+  PEERS=""
+  ORGNAME=""
+  PORT=""
+  TLS_ROOTCERT_FILE=""
+
+  while [ "$#" -gt 0 ]; do
+
+    # Check if organization number is a single digit or has multiple digits
+    if [ ${#1} -eq 1 ]; then
+        PEER="peer1.org0$1" # For single digit, e.g., org1 becomes org01
+	ORGNAME="org0$1"
+	PORT="600$1"
+    else
+        PEER="peer1.org$1"  # For multiple digits, e.g., org12 remains org12
+	ORGNAME="org$1"
+	PORT="60$1"
+    fi
+
+    TLS_ROOTCERT_FILE=${PWD}/../cert/chains/peerOrganizations/${ORGNAME}.chains/tlsca/tlsca.${ORGNAME}.chains-cert.pem
+
+    setGlobals $ORGNAME $PORT
+
+    ## Set peer addresses
+    if [ -z "$PEERS" ]
+    then
+	PEERS="$PEER"
+    else
+	PEERS="$PEERS $PEER"
+    fi
+
+    PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" --peerAddresses $CORE_PEER_ADDRESS)
+    ## Set path to TLS certificate
+    TLS_ROOTCERT_FILE=${PWD}/../cert/chains/peerOrganizations/${ORGNAME}.chains/tlsca/tlsca.${ORGNAME}.chains-cert.pem
+    TLSINFO=(--tlsRootCertFiles "${TLS_ROOTCERT_FILE}")
+    PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" "${TLSINFO[@]}")
+    # shift by one to get to the next organization
+    shift
+  done
+  echo $PEER_CONN_PARMS
+}
 
 function packageChaincode() {
     rm -rf basic.tar.gz
@@ -35,8 +79,9 @@ function approveChaincode() {
 }
 
 function commitChaincode() {
-    setGlobals $1 $2
-    peer lifecycle chaincode commit -o localhost:$4 --ordererTLSHostnameOverride orderer1.layer1.chains --channelID chains --name basic --version 1.0 --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" --peerAddresses localhost:6001 --tlsRootCertFiles "${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains/tls/ca.crt"
+    parsePeerConnectionParameters $@
+    # TODO: Hardcoded 7001
+    peer lifecycle chaincode commit -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --channelID chains --name basic --version 1.0 --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" "${PEER_CONN_PARMS[@]}" 
     peer lifecycle chaincode querycommitted --channelID chains --name basic
 }
 
@@ -46,21 +91,25 @@ function queryCommitted() {
 }
 
 function invokeChaincode() {
+    parsePeerConnectionParameters $@
     FABRIC_CFG_PATH=$PWD/../cert/config/
     setGlobals org01 6001
     peer lifecycle chaincode querycommitted --channelID chains --name basic
-    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic --peerAddresses localhost:6001 --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --peerAddresses localhost:6002 --peerAddresses localhost:6003 --peerAddresses localhost:6004 --peerAddresses localhost:6005 --peerAddresses localhost:6006 --peerAddresses localhost:6007 --peerAddresses localhost:6008 -c '{"function":"InitLedger","Args":[]}'
-    sleep 2
+
+    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"InitLedger","Args":[]}'
+
+    sleep 3
     echo "GetAllAssets:"
     peer chaincode query -C chains -n basic -c '{"Args":["GetAllAssets"]}'
-    sleep 2
 
+    sleep 3
     echo "ReadAsset asset6:(peer1)"
     peer chaincode query -C chains -n basic -c '{"Args":["ReadAsset","asset6"]}'
     sleep 2
 
     echo "TransferAsset asset6 Christopher"
-    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic --peerAddresses localhost:6001 --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --tlsRootCertFiles $TLS_ROOT_CERT --peerAddresses localhost:6002 --peerAddresses localhost:6003 --peerAddresses localhost:6004 --peerAddresses localhost:6005 --peerAddresses localhost:6006 --peerAddresses localhost:6007 --peerAddresses localhost:6008 -c '{"function":"TransferAsset","Args":["asset6","Christopher"]}'
+
+    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"TransferAsset","Args":["asset6","Christopher"]}'
 
     sleep 2
 
@@ -76,7 +125,7 @@ function invokeChaincode() {
 
 packageChaincode
 
-function installChaincodes() {
+function install() {
     installChaincode org01 6001
     installChaincode org02 6002
     installChaincode org03 6003
@@ -96,17 +145,32 @@ function installChaincodes() {
     queryInstalled org08 6008
 }
 
-function approveChaincode() {
-    approveChaincode 1 6001 basic_1.0:e4de097efb5be42d96aebc4bde18eea848aad0f5453453ba2aad97f2e41e0d57 7001
-    commitChaincode 1 6001 x 7001
+function approve() {
+    approveChaincode org01 6001 $PACKAGE 7001
+    approveChaincode org02 6002 $PACKAGE 7001
+    approveChaincode org03 6003 $PACKAGE 7001
+    approveChaincode org04 6004 $PACKAGE 7001
+    approveChaincode org05 6005 $PACKAGE 7001
+    approveChaincode org06 6006 $PACKAGE 7001
+    approveChaincode org07 6007 $PACKAGE 7001
+    approveChaincode org08 6008 $PACKAGE 7001
+}
 
-    queryCommitted 2 6002
-    queryCommitted 4 6004
-    queryCommitted 6 6006
-    queryCommitted 8 6008
+function commit() {
+    # Only one commit
+    commitChaincode 1 2 3 4 5 6 7 8
 
-    invokeChaincode
+    queryCommitted org02 6002
+    queryCommitted org04 6004
+    queryCommitted org06 6006
+    queryCommitted org08 6008
 }
 
 
-installChaincodes
+install
+
+approve
+
+commit
+
+invokeChaincode 1 2 3 4 5 6 7 8

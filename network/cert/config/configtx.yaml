@@ -274,6 +274,7 @@ Capabilities:
     # Prior to enabling V2.5 application capabilities, ensure that all
     # peers on a channel are at v2.5.0 or later.
     V2_5: true
+
 ################################################################################
 #
 #   SECTION: Application
@@ -302,7 +303,6 @@ Application: &ApplicationDefaults
     LifecycleEndorsement:
       Type: ImplicitMeta
       Rule: "MAJORITY Endorsement"
-    # Note that this endorsement is for channel configuraion, not the chaincode
     Endorsement:
       Type: ImplicitMeta
       Rule: "MAJORITY Endorsement"
