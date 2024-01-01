@@ -123,6 +123,21 @@ function invokeChaincode() {
     peer chaincode query -C chains -n basic -c '{"Args":["ReadAsset","asset6"]}'
 }
 
+function changeAsset() {
+    parsePeerConnectionParameters $@
+    FABRIC_CFG_PATH=$PWD/../cert/config/
+    setGlobals org01 6001
+    peer lifecycle chaincode querycommitted --channelID chains --name basic
+
+    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"TransferAsset","Args":["asset6","AWANG"]}'
+
+    sleep 3
+
+    echo "ReadAsset asset6:(peer2)"
+    setGlobals org02 6002
+    peer chaincode query -C chains -n basic -c '{"Args":["ReadAsset","asset6"]}'
+}
+
 packageChaincode
 
 function install() {
@@ -157,7 +172,6 @@ function approve() {
 }
 
 function commit() {
-    # Only one commit
     commitChaincode 1 2 3 4 5 6 7 8
 
     queryCommitted org02 6002
@@ -167,10 +181,12 @@ function commit() {
 }
 
 
-install
+# install
 
-approve
+# approve
 
-commit
+# commit
 
-invokeChaincode 1 2 3 4 5 6 7 8
+# invokeChaincode 1 2 3 4 5 6 
+
+changeAsset 1 2 3 4 5 6
