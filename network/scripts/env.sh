@@ -7,7 +7,11 @@ export FABRIC_CFG_PATH=${PWD}/../cert/config
 # Get docker sock path from environment variable
 SOCK="${DOCKER_HOST:-/var/run/docker.sock}"
 DOCKER_SOCK="${SOCK##unix://}"
-export ORDERER_CA=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem
+
+export ORDERER1_CA=${PWD}/../cert/chains/ordererOrganizations/ord01.chains/tlsca/tlsca.ord01.chains-cert.pem
+export ORDERER2_CA=${PWD}/../cert/chains/ordererOrganizations/ord02.chains/tlsca/tlsca.ord02.chains-cert.pem
+export ORDERER3_CA=${PWD}/../cert/chains/ordererOrganizations/ord03.chains/tlsca/tlsca.ord03.chains-cert.pem
+
 export CHANNEL_NAME=chains
 
 # Set environment variables for the peer org

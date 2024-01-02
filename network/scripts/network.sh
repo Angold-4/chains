@@ -3,8 +3,6 @@
 # Enable the environment variable
 . env.sh
 
-export ORDERER_CA=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem
-
 # println echos string
 function println() {
     echo -e "$1"
@@ -40,17 +38,24 @@ function createGenesisBlock() {
 function createChannel() {
     which osnadmin
     if [ "$?" -ne 0 ]; then
-	fatalln "osnadmin tool not found."
+        fatalln "osnadmin tool not found."
     fi
 
-    export ORDERER_CA=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem
-    export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.crt
-    export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/../cert/chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.key
+    for arg in "$@"
+    do
+        ORDERER="ord0${arg}" # will only have single digits orderers
+        PORT=$((9200 + arg))
 
-    # Create the channel and join orderer1.layer1.chains to the channel.
-    osnadmin channel join --channelID chains --config-block ${PWD}/../channel-artifacts/chains.block -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
-    osnadmin channel list --channelID chains -o localhost:9201 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
+        export ORDERER_CA="${PWD}/../cert/chains/ordererOrganizations/${ORDERER}.chains/tlsca/tlsca.${ORDERER}.chains-cert.pem"
+        export ORDERER_ADMIN_TLS_SIGN_CERT="${PWD}/../cert/chains/ordererOrganizations/${ORDERER}.chains/orderers/orderer1.${ORDERER}.chains/tls/server.crt"
+        export ORDERER_ADMIN_TLS_PRIVATE_KEY="${PWD}/../cert/chains/ordererOrganizations/${ORDERER}.chains/orderers/orderer1.${ORDERER}.chains/tls/server.key"
+
+        # Create the channel and join the orderer to the channel.
+        osnadmin channel join --channelID chains --config-block ${PWD}/../channel-artifacts/chains.block -o localhost:${PORT} --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
+        osnadmin channel list --channelID chains -o localhost:${PORT} --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY"
+    done
 }
+
 
 function joinChannel() {
     setGlobals $1 $2
@@ -78,7 +83,8 @@ function setAnchorPeer() {
 }
 
 createGenesisBlock
-createChannel
+
+createChannel 1 2 3
 
 function joinChannels() {
     joinChannel org01 6001

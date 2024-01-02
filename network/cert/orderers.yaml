@@ -5,14 +5,38 @@ OrdererOrgs:
   # ---------------------------------------------------------------------------
   # Orderer
   # ---------------------------------------------------------------------------
-  - Name: orderer
-    Domain: layer1.chains
+  - Name: ord01
+    Domain: ord01.chains
     EnableNodeOUs: true
     # ---------------------------------------------------------------------------
     # "Specs" - See PeerOrgs for complete description
     # ---------------------------------------------------------------------------
     Template:
-      Count: 3
+      Count: 1
+      SANS:
+        - localhost
+      Start: 1
+
+  - Name: ord02
+    Domain: ord02.chains
+    EnableNodeOUs: true
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs for complete description
+    # ---------------------------------------------------------------------------
+    Template:
+      Count: 1
+      SANS:
+        - localhost
+      Start: 1
+
+  - Name: ord03
+    Domain: ord03.chains
+    EnableNodeOUs: true
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs for complete description
+    # ---------------------------------------------------------------------------
+    Template:
+      Count: 1
       SANS:
         - localhost
       Start: 1

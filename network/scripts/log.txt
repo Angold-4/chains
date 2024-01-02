@@ -1,15 +1,2 @@
-2024-01-01 21:08:25.310 UTC 01ab INFO [lifecycle] QueryChaincodeDefinition -> Successfully queried chaincode name 'basic' with definition {sequence: 1, endorsement info: (version: '1.0', plugin: 'escc', init required: false), validation info: (plugin: 'vscc', policy: '12202f4368616e6e656c2f4170706c69636174696f6e2f456e646f7273656d656e74'), collections: ()},
-2024-01-01 21:08:25.310 UTC 01ac INFO [endorser] callChaincode -> finished chaincode: _lifecycle duration: 0ms channel=chains txID=a0b9619e
-2024-01-01 21:08:25.310 UTC 01ad INFO [comm.grpc.server] 1 -> unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.25.0.1:44980 grpc.code=OK grpc.call_duration=1.133072ms
-2024-01-01 21:08:25.342 UTC 01ae INFO [endorser] callChaincode -> finished chaincode: basic duration: 0ms channel=chains txID=b8f56a10
-2024-01-01 21:08:25.343 UTC 01af INFO [comm.grpc.server] 1 -> unary call completed grpc.service=protos.Endorser grpc.method=ProcessProposal grpc.peer_address=172.25.0.1:44992 grpc.code=OK grpc.call_duration=807.404µs
-
-2024-01-01 21:08:27.349 UTC 01b0 INFO [gossip.privdata] StoreBlock -> Received block [20] from buffer channel=chains
-2024-01-01 21:08:27.359 UTC 01b1 INFO [committer.txvalidator] Validate -> [chains] Validated block [20] in 9ms
-2024-01-01 21:08:27.363 UTC 01b2 INFO [kvledger] commit -> [chains] Committed block [20] with 1 transaction(s) in 3ms (state_validation=0ms block_and_pvtdata_commit=2ms state_commit=0ms) commitHash=[ec88b85c7fc55708e86107f2873b043171eb6ca4f7decbd3093bc50352b132c3]
-
-
-2024-01-01 21:08:27.349 UTC 0105 INFO [gossip.privdata] StoreBlock -> Received block [20] from buffer channel=chains
-2024-01-01 21:08:27.359 UTC 0106 INFO [committer.txvalidator] Validate -> [chains] Validated block [20] in 9ms
-2024-01-01 21:08:27.362 UTC 0107 INFO [kvledger] commit -> [chains] Committed block [20] with 1 transaction(s) in 3ms (state_validation=0ms block_and_pvtdata_commit=2ms state_commit=0ms) commitHash=[ec88b85c7fc55708e86107f2873b043171eb6ca4f7decbd3093bc50352b132c3]
-
+[34m2024-01-03 03:27:42.874 HKT 0001 INFO[0m [channelCmd] [34;1mInitCmdFactory[0m -> Endorser and orderer connections initialized
+[34m2024-01-03 03:27:42.889 HKT 0002 INFO[0m [channelCmd] [34;1mexecuteJoin[0m -> Successfully submitted proposal to join channel

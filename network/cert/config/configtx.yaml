@@ -197,32 +197,86 @@ Organizations:
         Type: Signature
         Rule: "OR('org08MSP.peer')"
 
-  - &orderer
-    Name: orderer
+  - &orderer1
+    Name: ord01
     # ID to load the MSP definition as
-    ID: OrdererMSP
+    ID: ord01MSP
     # MSPDir is the filesystem path which contains the MSP configuration
-    MSPDir: ../chains/ordererOrganizations/layer1.chains/msp
+    MSPDir: ../chains/ordererOrganizations/ord01.chains/msp
     # Policies defines the set of policies at this level of the config tree
     # For organization policies, their canonical path is usually
     #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('OrdererMSP.member')"
+        Rule: "OR('ord01MSP.member')"
       Writers:
         Type: Signature
-        Rule: "OR('OrdererMSP.member')"
+        Rule: "OR('ord01MSP.member')"
       Admins:
         Type: Signature
-        Rule: "OR('OrdererMSP.admin')"
+        Rule: "OR('ord01MSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('OrdererMSP.peer')"
+        Rule: "OR('ord01MSP.peer')"
     # OrdererEndpoints is a list of all orderers this org runs which clients
     # and peers may to connect to to push transactions and receive blocks respectively.
     OrdererEndpoints:
-      - orderer1.layer1.chains:7001
+      - orderer1.ord01.chains:7001
+
+  - &orderer2
+    Name: ord02
+    # ID to load the MSP definition as
+    ID: ord02MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/ordererOrganizations/ord02.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ord02MSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ord02MSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ord02MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('ord02MSP.peer')"
+    # OrdererEndpoints is a list of all orderers this org runs which clients
+    # and peers may to connect to to push transactions and receive blocks respectively.
+    OrdererEndpoints:
+      - orderer1.ord02.chains:7002
+
+  - &orderer3
+    Name: ord03
+    # ID to load the MSP definition as
+    ID: ord03MSP
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: ../chains/ordererOrganizations/ord03.chains/msp
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ord03MSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ord03MSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ord03MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('ord03MSP.peer')"
+    # OrdererEndpoints is a list of all orderers this org runs which clients
+    # and peers may to connect to to push transactions and receive blocks respectively.
+    OrdererEndpoints:
+      - orderer1.ord03.chains:7003
 ################################################################################
 #
 #   SECTION: Capabilities
@@ -323,7 +377,9 @@ Orderer: &OrdererDefaults
   # as TLS validation.  The preferred way to specify orderer addresses is now
   # to include the OrdererEndpoints item in your org definition
   Addresses:
-    - orderer1.layer1.chains:7001
+    - orderer1.ord01.chains:7001
+    - orderer1.ord02.chains:7002
+    - orderer1.ord03.chains:7003
   # Batch Timeout: The amount of time to wait before creating a batch
   BatchTimeout: 2s
   # Batch Size: Controls the number of messages batched into a block
@@ -339,7 +395,6 @@ Orderer: &OrdererDefaults
     PreferredMaxBytes: 2 MB
   # Organizations is the list of orgs which are defined as participants on
   # the orderer side of the network
-  Organizations:
   # Policies defines the set of policies at this level of the config tree
   # For Orderer policies, their canonical path is
   #   /Channel/Orderer/<PolicyName>
@@ -404,13 +459,27 @@ Profiles:
       OrdererType: etcdraft
       EtcdRaft:
         Consenters:
-          - Host: orderer1.layer1.chains
+          - Host: orderer1.ord01.chains
             Port: 7001
-            ClientTLSCert: ../chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.crt
-            ServerTLSCert: ../chains/ordererOrganizations/layer1.chains/orderers/orderer1.layer1.chains/tls/server.crt
-      Organizations:
-        - *orderer
+            ClientTLSCert: ../chains/ordererOrganizations/ord01.chains/orderers/orderer1.ord01.chains/tls/server.crt
+            ServerTLSCert: ../chains/ordererOrganizations/ord01.chains/orderers/orderer1.ord01.chains/tls/server.crt
+          - Host: orderer1.ord02.chains
+            Port: 7002
+            ClientTLSCert: ../chains/ordererOrganizations/ord02.chains/orderers/orderer1.ord02.chains/tls/server.crt
+            ServerTLSCert: ../chains/ordererOrganizations/ord02.chains/orderers/orderer1.ord02.chains/tls/server.crt
+          - Host: orderer1.ord03.chains
+            Port: 7003
+            ClientTLSCert: ../chains/ordererOrganizations/ord03.chains/orderers/orderer1.ord03.chains/tls/server.crt
+            ServerTLSCert: ../chains/ordererOrganizations/ord03.chains/orderers/orderer1.ord03.chains/tls/server.crt
       Capabilities: *OrdererCapabilities
+      Addresses:
+        - orderer1.ord01.chains:7001
+        - orderer1.ord02.chains:7002
+        - orderer1.ord03.chains:7003
+      Organizations:
+        - *orderer1
+        - *orderer2
+        - *orderer3
     Application:
       <<: *ApplicationDefaults
       Organizations:

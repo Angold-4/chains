@@ -8,7 +8,6 @@ export id=$2
 export FABRIC_CFG_PATH=${PWD}/../cert/config/
 export PEER_CONN_PARMS=()
 
-export TLS_ROOT_CERT=${PWD}/../cert/chains/peerOrganizations/layer1.chains/peers/peer1.layer1.chains/tls/ca.crt
 export PACKAGE="basic_1.0:e4de097efb5be42d96aebc4bde18eea848aad0f5453453ba2aad97f2e41e0d57"
 
 parsePeerConnectionParameters() {
@@ -19,7 +18,6 @@ parsePeerConnectionParameters() {
   TLS_ROOTCERT_FILE=""
 
   while [ "$#" -gt 0 ]; do
-
     # Check if organization number is a single digit or has multiple digits
     if [ ${#1} -eq 1 ]; then
         PEER="peer1.org0$1" # For single digit, e.g., org1 becomes org01
@@ -74,14 +72,14 @@ function queryInstalled() {
 function approveChaincode() {
     setGlobals $1 $2
     local packageID=$3
-    peer lifecycle chaincode approveformyorg -o localhost:$4 --ordererTLSHostnameOverride orderer1.layer1.chains --channelID chains --name basic --version 1.0 --package-id $packageID --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem"
-    peer lifecycle chaincode checkcommitreadiness --channelID chains --name basic --version 1.0 --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" --output json
+    peer lifecycle chaincode approveformyorg -o localhost:$4 --ordererTLSHostnameOverride orderer1.ord01.chains --channelID chains --name basic --version 1.0 --package-id $packageID --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/ord01.chains/tlsca/tlsca.ord01.chains-cert.pem"
+    peer lifecycle chaincode checkcommitreadiness --channelID chains --name basic --version 1.0 --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/ord01.chains/tlsca/tlsca.ord01.chains-cert.pem" --output json
 }
 
 function commitChaincode() {
     parsePeerConnectionParameters $@
     # TODO: Hardcoded 7001
-    peer lifecycle chaincode commit -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --channelID chains --name basic --version 1.0 --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" "${PEER_CONN_PARMS[@]}" 
+    peer lifecycle chaincode commit -o localhost:7001 --ordererTLSHostnameOverride orderer1.ord01.chains --channelID chains --name basic --version 1.0 --sequence 1 --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/ord01.chains/tlsca/tlsca.ord01.chains-cert.pem" "${PEER_CONN_PARMS[@]}" 
     peer lifecycle chaincode querycommitted --channelID chains --name basic
 }
 
@@ -96,7 +94,7 @@ function invokeChaincode() {
     setGlobals org01 6001
     peer lifecycle chaincode querycommitted --channelID chains --name basic
 
-    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"InitLedger","Args":[]}'
+    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.ord01.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/ord01.chains/tlsca/tlsca.ord01.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"InitLedger","Args":[]}'
 
     sleep 3
     echo "GetAllAssets:"
@@ -109,7 +107,7 @@ function invokeChaincode() {
 
     echo "TransferAsset asset6 Christopher"
 
-    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"TransferAsset","Args":["asset6","Christopher"]}'
+    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.ord01.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/ord01.chains/tlsca/tlsca.ord01.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"TransferAsset","Args":["asset6","Christopher"]}'
 
     sleep 2
 
@@ -129,7 +127,7 @@ function changeAsset() {
     setGlobals org01 6001
     peer lifecycle chaincode querycommitted --channelID chains --name basic
 
-    peer chaincode invoke -o localhost:7001 --ordererTLSHostnameOverride orderer1.layer1.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/layer1.chains/tlsca/tlsca.layer1.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"TransferAsset","Args":["asset6","AWANG"]}'
+    peer chaincode invoke -o localhost:7002 --ordererTLSHostnameOverride orderer1.ord02.chains --tls --cafile "${PWD}/../cert/chains/ordererOrganizations/ord02.chains/tlsca/tlsca.ord02.chains-cert.pem" -C chains -n basic "${PEER_CONN_PARMS[@]}" -c '{"function":"TransferAsset","Args":["asset6","AWANG"]}'
 
     sleep 3
 
@@ -181,12 +179,12 @@ function commit() {
 }
 
 
-# install
+install
 
-# approve
+approve
 
-# commit
+commit
 
-# invokeChaincode 1 2 3 4 5 6 
+invokeChaincode 1 2 3 4 5 6 7 8
 
-changeAsset 1 2 3 4 5 6
+# changeAsset 1 2 3 4 5 6 7 8

@@ -27,7 +27,7 @@ fetchChannelConfig() {
     setGlobals $ORGNAME $PORT
 
     set -x
-    peer channel fetch config config_block.pb -o orderer1.layer1.chains:7001 --ordererTLSHostnameOverride orderer1.layer1.chains -c chains --tls --cafile "$ORDERER_CA"
+    peer channel fetch config config_block.pb -o orderer1.ord01.chains:7001 --ordererTLSHostnameOverride orderer1.ord01.chains -c chains --tls --cafile "$ORDERER_CA"
     { set +x; } 2>/dev/null
 
     set -x
@@ -61,7 +61,7 @@ createAnchorPeerUpdate() {
 }
 
 updateAnchorPeer() {
-  peer channel update -o orderer1.layer1.chains:7001 --ordererTLSHostnameOverride orderer1.layer1.chains -c $CHANNEL_NAME -f ${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile "$ORDERER_CA" >&log.txt
+  peer channel update -o orderer1.ord01.chains:7001 --ordererTLSHostnameOverride orderer1.ord01.chains -c $CHANNEL_NAME -f ${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile "$ORDERER_CA" >&log.txt
   res=$?
   cat log.txt
 }
@@ -69,6 +69,7 @@ updateAnchorPeer() {
 ORGNAME=$1
 PORT=$2
 export CHANNEL_NAME=chains
+export ORDERER_CA="${PWD}/../cert/chains/ordererOrganizations/ord01.chains/tlsca/tlsca.ord01.chains-cert.pem"
 
 setGlobalsCLI $ORGNAME $PORT
 
