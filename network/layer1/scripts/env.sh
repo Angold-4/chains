@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # The execution environment
-export PATH="$PWD/../../fabric-bin:$PATH"
+export PATH="$PWD/../../../fabric-bin:$PATH"
 # create genesis block using configtxgen
 export FABRIC_CFG_PATH=${PWD}/../cert/config
 # Get docker sock path from environment variable

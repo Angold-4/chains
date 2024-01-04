@@ -55,7 +55,7 @@ parsePeerConnectionParameters() {
 function packageChaincode() {
     rm -rf basic.tar.gz
     # peer lifecycle chaincode package basic.tar.gz --path ${PWD}/../../chaincode/atcc/ --lang golang --label basic_1.0
-    peer lifecycle chaincode package basic.tar.gz --path ${PWD}/../../../thrprojs/fabric/fabric-samples/asset-transfer-basic/chaincode-go/ --lang golang --label basic_1.0
+    peer lifecycle chaincode package basic.tar.gz --path ${PWD}/../../../../thrprojs/fabric/fabric-samples/asset-transfer-basic/chaincode-go/ --lang golang --label basic_1.0
 }
 
 # Install the chaincode for peers inside chains

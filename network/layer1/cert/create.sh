@@ -2,7 +2,7 @@
 
 # Just for creating the scripts for benchmarking environment
 # The execution environment
-export PATH="$PWD/../../fabric-bin:$PATH"
+export PATH="$PWD/../../../fabric-bin:$PATH"
 
 # generate key materials for layer 1 peers
 rm -rf chains/*
