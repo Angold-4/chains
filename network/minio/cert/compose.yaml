@@ -1,0 +1,67 @@
+# Settings and configurations that are common for all containers
+x-minio-common: &minio-common
+  image: quay.io/minio/minio
+  command: server --console-address ":9001" http://node0{1...4}.minio/mnt/data
+  expose:
+    - "9000"
+    - "9001"
+  environment:
+    MINIO_ROOT_USER: fio
+    MINIO_ROOT_PASSWORD: fiominio
+
+services:
+  node01.minio: 
+    <<: *minio-common
+    image: quay.io/minio/minio
+    container_name: node01.minio
+    hostname: node01.minio
+    ports:
+      - "10001:9000"
+      - "9001:9001"
+    volumes:
+      - /mnt/minio/volume01:/mnt/data
+    networks:
+      - minio
+
+  node02.minio: 
+    <<: *minio-common
+    image: quay.io/minio/minio
+    container_name: node02.minio
+    hostname: node02.minio
+    ports:
+      - "10002:9000"
+      - "9002:9001"
+    volumes:
+      - /mnt/minio/volume02:/mnt/data
+    networks:
+      - minio
+
+  node03.minio: 
+    <<: *minio-common
+    image: quay.io/minio/minio
+    container_name: node03.minio
+    hostname: node03.minio
+    ports:
+      - "10003:9000"
+      - "9003:9001"
+    volumes:
+      - /mnt/minio/volume03:/mnt/data
+    networks:
+      - minio
+
+  node04.minio: 
+    <<: *minio-common
+    image: quay.io/minio/minio
+    container_name: node04.minio
+    hostname: node04.minio
+    ports:
+      - "10004:9000"
+      - "9004:9001"
+    volumes:
+      - /mnt/minio/volume04:/mnt/data
+    networks:
+      - minio
+
+networks:
+  minio:
+    name: minio
