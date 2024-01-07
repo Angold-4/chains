@@ -22,3 +22,7 @@ go.work
 
 network/layer1/cert/chains/
 fabric-bin/
+benchmarks/vegeta/
+
+# DS_Store
+*.DS_Store
