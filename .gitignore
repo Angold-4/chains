@@ -21,3 +21,4 @@
 go.work
 
 network/layer1/cert/chains/
+fabric-bin/
